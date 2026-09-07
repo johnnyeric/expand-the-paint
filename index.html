@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no, shrink-to-fit=no" />
+    <meta name="theme-color" content="#1b1714" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>Expand the Paint</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="game"></canvas>
+
+      <div id="hud">
+        <header class="top">
+          <div class="brand">
+            <span class="mark">EP</span>
+            <div>
+              <strong>Expand the Paint</strong>
+              <small>Spray is the fight</small>
+            </div>
+          </div>
+          <div id="timer">3:00</div>
+        </header>
+
+        <aside class="scores">
+          <div class="row">
+            <span class="swatch blue"></span> Blue
+            <b id="pct-1">0%</b>
+            <div class="bar"><i id="cover-1"></i></div>
+          </div>
+          <div class="row">
+            <span class="swatch yellow"></span> Yellow
+            <b id="pct-2">0%</b>
+            <div class="bar"><i id="cover-2"></i></div>
+          </div>
+          <div class="row">
+            <span class="swatch magenta"></span> Magenta
+            <b id="pct-3">0%</b>
+            <div class="bar"><i id="cover-3"></i></div>
+          </div>
+          <div class="row">
+            <span class="swatch green"></span> Green
+            <b id="pct-4">0%</b>
+            <div class="bar"><i id="cover-4"></i></div>
+          </div>
+          <canvas id="minimap" width="148" height="148" aria-label="Room map"></canvas>
+        </aside>
+
+        <div class="bottom">
+          <p id="hint">Move the mouse to turn. Hold click to spray. Paint a path home if you wander off colour.</p>
+          <div id="tank">
+            <div class="tank-meta">
+              <span>Paint tank</span>
+              <span id="tank-readout">100</span>
+            </div>
+            <div class="tank-track"><div id="tank-fill"></div></div>
+            <p id="status">On your colour — faster, refilling</p>
+          </div>
+          <p class="keys">WASD move · Move the mouse to turn · Hold click / space to spray</p>
+          <p class="touch-keys">Left stick moves · Right stick aims and sprays</p>
+        </div>
+      </div>
+
+      <div id="touch" aria-hidden="true">
+        <div id="joy-left" class="joy">
+          <div class="knob"></div>
+          <span class="joy-label">Move</span>
+        </div>
+        <div id="joy-right" class="joy">
+          <div class="knob"></div>
+          <span class="joy-label">Aim + spray</span>
+        </div>
+      </div>
+
+      <section id="start" class="overlay">
+        <div class="card">
+          <p class="eyebrow">Prototype · JOH-105</p>
+          <h1>Expand the Paint</h1>
+          <p class="lede">
+            You are a little sprayer. Paint is how you grow and how you fight — same tank, same stream, no size buff.
+          </p>
+          <ul class="rules">
+            <li>Claim the floor. Last sprayer standing wins, or most coverage if the timer ends.</li>
+            <li>On your colour: move faster and refill. Off it: the tank drains.</li>
+            <li>Opposing streams collide, eat paint, and shove you back. The border moves between you.</li>
+            <li>Lose the floor (coverage at zero) and you're out. An empty tank is not the end — paint a path home and refill.</li>
+          </ul>
+          <button id="play" type="button">Play as Blue</button>
+          <div class="actions">
+            <button id="host" type="button" class="ghost">Host a match</button>
+            <button id="join-open" type="button" class="ghost">Join a friend</button>
+          </div>
+          <p id="start-error" class="err hidden"></p>
+          <p class="fine">On a phone: left thumb moves, right thumb aims and sprays. Host a match to play together on another device.</p>
+        </div>
+      </section>
+
+      <section id="join" class="overlay hidden">
+        <div class="card">
+          <p class="eyebrow">Join match</p>
+          <h1>Enter the room code</h1>
+          <p class="lede">
+            The host sees a four-character code. Type it here and you’ll take the next colour — Yellow, then Magenta, then Green.
+          </p>
+          <label class="code-label" for="join-code">Room code</label>
+          <input
+            id="join-code"
+            name="room"
+            maxlength="4"
+            autocomplete="off"
+            autocorrect="off"
+            spellcheck="false"
+            placeholder="K7M2"
+            inputmode="text"
+          />
+          <p id="join-error" class="err hidden"></p>
+          <button id="join-go" type="button">Join room</button>
+          <button id="join-back" type="button" class="ghost">Back</button>
+        </div>
+      </section>
+
+      <section id="lobby" class="overlay hidden">
+        <div class="card">
+          <p class="eyebrow" id="lobby-role">Host</p>
+          <h1 id="lobby-title">Room</h1>
+          <p class="lede">
+            Share the code or the link. Friends drop in on another phone or laptop. Empty slots stay bots.
+          </p>
+          <div class="share">
+            <code id="room-code">————</code>
+            <button id="copy-link" type="button" class="ghost compact">Copy link</button>
+          </div>
+          <ul id="lobby-slots" class="slots"></ul>
+          <p id="lobby-status" class="fine"></p>
+          <button id="lobby-start" type="button">Start spraying</button>
+          <button id="lobby-leave" type="button" class="ghost">Leave room</button>
+        </div>
+      </section>
+
+      <div id="out" class="hidden">
+        <p id="out-title">Out</p>
+        <p id="out-body">The others keep spraying.</p>
+      </div>
+
+      <section id="end" class="overlay hidden">
+        <div class="card">
+          <p class="eyebrow">Round over</p>
+          <h1 id="end-title">Blue holds the floor</h1>
+          <p class="lede" id="end-body"></p>
+          <ol id="end-scores"></ol>
+          <button id="again" type="button">Spray again</button>
+        </div>
+      </section>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
