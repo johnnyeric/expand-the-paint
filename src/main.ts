@@ -1,6 +1,13 @@
 import './style.css'
 import { Game } from './game/Game.ts'
 
+const meta = import.meta as ImportMeta & { env?: { DEV?: boolean } }
+if (meta.env == null) {
+  Object.defineProperty(import.meta, 'env', {
+    value: { DEV: false, PROD: true, MODE: 'production' },
+  })
+}
+
 lockPageZoom()
 
 const canvas = document.querySelector('#game')
