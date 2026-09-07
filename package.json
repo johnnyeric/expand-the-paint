@@ -1,0 +1,21 @@
+{
+  "name": "expand-the-paint",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 43217",
+    "build": "tsc && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 43217",
+    "check:sim": "node --experimental-strip-types --disable-warning=ExperimentalWarning src/game/consistencyCheck.ts"
+  },
+  "devDependencies": {
+    "@types/three": "^0.185.4",
+    "typescript": "~6.0.2",
+    "vite": "^8.2.2"
+  },
+  "dependencies": {
+    "peerjs": "^1.5.5",
+    "three": "^0.185.1"
+  }
+}
