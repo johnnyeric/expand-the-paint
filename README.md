@@ -36,6 +36,8 @@ npm run check:sim
 
 ## Deploy
 
-This is a normal Vite app. Vercel installs dependencies and runs `npm run build`. There is no split CDN and no `a.txt` chunk files.
+This is a normal Vite app. There are no `a.txt` chunk files in the source.
 
-Production is the Vercel project linked to this GitHub repository. A push to `main` deploys.
+Those `a.txt` / `a.css` files were a workaround: Vercel was never linked to this GitHub repo, so deploys went through a file-upload API that corrupts JavaScript (`Error(` → `Error8`, `hidden` → `hiddden`) and chokes above ~40KB. The game was split across extra Vercel projects so each piece stayed small. One of those pieces (`loop.js`) shipped broken, which is why production died.
+
+Until the Vercel GitHub app is granted access to **johnnyeric/expand-the-paint**, production HTML loads the GitHub source through [esm.sh](https://esm.sh) and CSS through jsDelivr. Grant the app access to this repo in GitHub → Settings → Applications → Vercel → Repository access, then Vercel can `npm run build` on every push to `main`.
